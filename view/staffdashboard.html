@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <title>Staff Dashboard - Real Estate</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            background-color: #01260e;
+        }
+
+        .dashboard-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .staff-profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+
+        .sidebar {
+            background-color: #2c3e50;
+            color: white;
+        }
+
+        .staff-info {
+            text-align: center;
+        }
+
+        .listing-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        /* Add Listing Section Styling */
+        #addListingSection {
+            background-color: #2c3e50;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 48%;
+            color: white;
+        }
+
+        #listingForm {
+            display: grid;
+            gap: 15px;
+        }
+
+        /* View Listings Section Styling */
+        #viewListingsSection, #viewClientListingsSection {
+            background-color: #2c3e50;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 50%;
+        }
+
+            #viewListingsSection label {
+             color:lightcoral;
+            }
+            #listingsContainer, #listingsClient {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 10px;
+            }
+       
+        .listing-card {
+            border: 1px solid #ccc;
+            border-radius:20px;
+            padding: 15px;
+            background-color: #d2d0ce;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary:hover {
+            background-color: #1abc9c; /* Changes to teal on hover */
+            border-color: #16a085; /* Border changes to a darker teal */
+        }
+
+        .btn-warning:hover {
+            background-color: #e74c3c; /* Changes to a red shade */
+            border-color: #c0392b; /* Darker red for the border */
+        }
+        .header-logo {
+            max-height: 200px;
+            margin-right: 15px;
+            width:100%;
+        }
+
+        .header-slogan {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: #555;
+            margin: 0;
+        }
+
+        footer {
+            background-color: #f8f9fa;
+            padding: 20px 0;
+            text-align: center;
+            color: #6c757d;
+          
+        }
+        .modal-content {
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header, .modal-footer {
+            border: none;
+        }
+
+        .carousel-inner img {
+            object-fit: cover;
+            border-radius: 20px;
+            height: 400px; /* Ensuring consistent image height */
+        }
+
+        .modal-body h3, .modal-body h5 {
+            font-weight: bold;
+        }
+
+        .modal-body p {
+            font-size: 1rem;
+        }
+
+        .carousel-control-prev-icon, .carousel-control-next-icon {
+            background-color: rgba(0, 0, 0, 0.5);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+        }
+
+            .carousel-control-prev-icon:hover, .carousel-control-next-icon:hover {
+                background-color: rgba(0, 0, 0, 0.8);
+            }
+
+        .modal-footer button {
+            border-radius: 30px;
+            padding: 0.5rem 1.5rem;
+        }
+
+        /* Buttons customization for carousel */
+        .carousel-control-prev, .carousel-control-next {
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid dashboard-container">
+        <!-- Sidebar Section -->
+        <aside class="col-md-3 col-lg-2 sidebar d-flex flex-column p-3">
+            <div class="staff-info">
+                <img src="" id="profilePic" alt="Profile Picture" class="staff-profile-pic img-fluid" />
+                <p><strong>First Name:</strong> <span id="firstName"></span></p>
+                <p><strong>Last Name:</strong><span id="lastName"></span></p>
+                <p><strong>Employment ID:</strong> <span id="employmentId"></span></p>
+                <button style="color:black" id="btnSearchListing" class="btn btn-light w-100 mb-2">Search Listings</button>
+                <button style="color:black" id="btnSearchClient"class="btn btn-light w-100 mb-2">Search Clients</button>
+                <button style="color:black" class="btn btn-light w-100 mb-2">Add Appointments</button>
+                <button style="color:black" class="btn btn-light w-100 mb-2">View Appointments</button>
+                <button style="color:black" class="btn btn-light w-100 mb-2">Manage Properties</button>
+            </div>
+        </aside>
+
+        <!-- Main Content Section -->
+        <main class="mx-4 col-md-9 col-lg-10 main-content">
+            <header class="container  py-3">
+                <div class="row d-flex align-items-center">
+                    <div class="col-md-12">
+                        <img src="/roylux_header.png" alt="Company Logo" class="header-logo">
+                    </div>
+
+                </div>
+            </header>
+            <div class="row g-4 listing-container">
+                <!-- Add Listing Section -->
+                <section id="addListingSection" class="col-lg-6 text-center">
+                    <h2>Add New Listing</h2>
+                    <form id="listingForm" enctype="multipart/form-data" method="POST" class="row g-3">
+                        <div class="col-md-12">
+                            <label for="clientImage" class="form-label">Client Picture:</label>
+                            <input type="file" id="clientImage" name="clientImage" class="form-control" accept="image/*" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="firstName" class="form-label">First Name:</label>
+                            <input type="text" id="firstName" name="firstName" class="form-control" placeholder="Owner's first name" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="lastName" class="form-label">Last Name:</label>
+                            <input type="text" id="lastName" name="lastName" class="form-control" placeholder="Owner's last name" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="ownersAddress" class="form-label">Owners Address:</label>
+                            <input type="text" id="ownersAddress" name="ownersAddress" class="form-control" placeholder="Owners address" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="email" class="form-label">Email:</label>
+                            <input type="email" id="email" name="email" class="form-control" placeholder="Owner's email" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="ownerPhone" class="form-label">Phone:</label>
+                            <input type="tel" id="ownerPhone" name="ownerPhone" class="form-control" placeholder="Owner's phone number" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="clientOf" class="form-label">Client of:</label>
+                            <input type="text" id="clientOf" name="clientOf" class="form-control" placeholder="Staff Employment Number" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="title" class="form-label">Property Title:</label>
+                            <input type="text" id="title" name="title" class="form-control" placeholder="Property title" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="street" class="form-label">Street:</label>
+                            <input type="text" id="street" name="street" class="form-control" placeholder="Property street" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="locality" class="form-label">Locality:</label>
+                            <input type="text" id="locality" name="locality" class="form-control" placeholder="Property locality" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="city" class="form-label">City / Town :</label>
+                            <input type="text" id="city" name="city" class="form-control" placeholder="Property city" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="price" class="form-label">Listing Price:</label>
+                            <input type="number" id="price" name="price" class="form-control" placeholder="List price" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="description" class="form-label">Property Description:</label>
+                            <textarea id="description" name="description" class="form-control" placeholder="Property description" required></textarea>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="propertyImage" class="form-label">Property Image:</label>
+                            <input type="file" id="propertyImage" name="propertyImage" class="form-control" accept="image/*" required>
+                        </div>
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-secondary w-100">Add Listing</button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- View Listings Section -->
+                <section id="viewListingsSection" class="text-center col-lg-6">
+                    <h2 style="color:white;">Search Listing</h2>
+                    <form id="searchForm" enctype="multipart/form-data" method="POST">
+                        <div class="mb-3">
+                            <label for="searchStreet">Street</label>
+                            <input type="text" name="searchStreet" class="form-control" id="searchStreet" placeholder="Street..." aria-label="Search Street name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="searchLocality">Locality</label>
+                            <input type="text" name="searchLocality" class="form-control" id="searchLocality" placeholder="Locality..." aria-label="Search Locality name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="searchCity">City</label>
+                            <input type="text" name="searchCity" class="form-control" id="searchCity" placeholder="City..." aria-label="Search City name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="searchPrice">Price</label>
+                            <input type="text" name="searchPrice" class="form-control" id="searchPrice" placeholder="Price..." aria-label="Search Price name">
+                        </div>
+                        <button type="submit" class="btn btn-danger w-100 mt-3 mb-3" id="searchButton">Search</button>
+                    </form>
+                    <h2 style="color:white;">My Listings</h2>
+                    <div id="listingsContainer" class="row g-3">
+
+                        <!-- Listings will be dynamically inserted here -->
+                    </div>
+                </section>
+
+
+                <!-- View Client Listings Section -->
+                <section style=" width:100vw" id="viewClientListingsSection" class=" text-center col-lg-6">
+                    <h2 style="color:white;">My Clients</h2>
+                    <div id="listingsClient" class="row g-3">
+                        <!-- Client listings will be dynamically inserted here -->
+                    </div>
+                </section>
+            </div>
+            <!-- Footer Section -->
+            <footer class="mt-3">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p>&copy; 2024 Roylux Reality. All Rights Reserved.</p>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-inline">
+                                <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
+                                <li class="list-inline-item"><a href="#">Terms of Service</a></li>
+                                <li class="list-inline-item"><a href="#">Contact Us</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </main>
+
+        <div class="modal fade text-center" id="editListingModal" tabindex="-1" aria-labelledby="editListingModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div style="background-color: #cfc4ba;" class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editListingModalLabel">Edit Property Listing</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Edit Listing Form -->
+                        <form id="editListingForm" enctype="multipart/form-data" method="POST">
+
+                            <div class="mb-3">
+                                <label for="propertyId" class="form-label">Property ID</label>
+                                <input type="text" class="form-control" id="propertyId" name="propertyId" readonly>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="editFirstName" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="editFirstName" name="editFirstName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editLastName" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="editLastName" name="editLastName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editOwnersAddress" class="form-label">Client Address</label>
+                                <input type="text" class="form-control" id="editOwnersAddress" name="editOwnersAddress" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editEmail" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="editEmail" name="editEmail" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editOwnerPhone" class="form-label">Phone</label>
+                                <input type="tel" class="form-control" id="editOwnerPhone" name="editOwnerPhone" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editClientOf" class="form-label">Client of (Staff Employment Number)</label>
+                                <input type="text" class="form-control" id="editClientOf" name="editClientOf" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editTitle" class="form-label">Property Title</label>
+                                <input type="text" class="form-control" id="editTitle" name="editTitle" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editStreet" class="form-label">Street</label>
+                                <input type="text" class="form-control" id="editStreet" name="editStreet" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editLocality" class="form-label">Locality</label>
+                                <input type="text" class="form-control" id="editLocality" name="editLocality" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editCity" class="form-label">City / Town</label>
+                                <input type="text" class="form-control" id="editCity" name="editCity" required>
+                            </div>
+                            <div class="mb-3" style=" display:none" ;>
+                                <label for="editOldStreet" class="form-label"> Street</label>
+                                <input type="text" class="form-control" id="editOldStreet" name="editOldStreet" required>
+                                <label for="editOldLocality" class="form-label"> Street</label>
+                                <input type="text" class="form-control" id="editOldLocality" name="editOldLocality" required>
+                                <label for="editOldCity" class="form-label"> Street</label>
+                                <input type="text" class="form-control" id="editOldCity" name="editOldCity" required>
+
+                            </div>
+                            <div class="mb-3">
+                                <label for="editPrice" class="form-label">Listing Price</label>
+                                <input type="number" class="form-control" id="editPrice" name="editPrice" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editDescription" class="form-label">Property Description</label>
+                                <textarea class="form-control" id="editDescription" name="editDescription" rows="3" required></textarea>
+                            </div>
+
+                            <button type="submit" id="updateListing" class="btn btn-success">Update Listing</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--upload-->
+        <div class="modal fade text-center" id="uploadPhotoModal" tabindex="-1" aria-labelledby="uploadPhotoModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div style="background-color: #cfc4ba;" class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="uploadPhotoModalLabel">Upload Property Photos</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Edit Listing Form -->
+                        <form id="uploadPhotosForm" enctype="multipart/form-data" method="POST">
+                            <div class="mb-3">
+                                <label for="uploadPropertyId" class="form-label">Property ID</label>
+                                <input type="text" class="form-control" id="uploadPropertyId" name="uploadPropertyId" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="uploadPhotos" class="form-label">Upload property Photos</label>
+                                <input type="file" class="form-control" id="uploadPhotos" name="uploadPhotos" accept="image/*" multiple>
+                            </div>
+
+                            <button type="submit" id="btnUploadPhotos" class="btn btn-success">Upload Photos</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- View Property Modal -->
+        <div class="modal fade" id="viewListingModal" tabindex="-1" aria-labelledby="viewListingModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="text-center modal-header bg-dark text-white">
+                        <h5 class="modal-title" id="viewListingModalLabel">Property Details</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Carousel for Property Images -->
+                        <div id="propertyCarousel" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner" id="imageCarousel">
+                                <!-- Example images will be dynamically inserted here -->
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#propertyCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon bg-dark rounded-circle" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#propertyCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon bg-dark rounded-circle" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+
+                        <!-- Property Information -->
+                        <div  class="text-center mt-2">
+                            <h3 id="propertyTitle" class="text-primary mb-3">Property Title</h3>
+                            <div class="row">
+                                <div class="col-md-6 text-center">
+                                    <p><strong>Location:</strong> <span id="propertyLocation">Not Available</span></p>
+                                    <p><strong>Price:</strong> <span id="propertyPrice">$0.00</span></p>
+                                    <div class="mt-1">
+                                        <h5>Description</h5>
+                                        <p id="propertyDescription" class="text-muted">No description available.</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 text-center">
+                                    <h5 >Owner Details</h5>
+                                    <p><strong>Name:</strong> <span id="ownerName">Unknown</span></p>
+                                    <p><strong>Email:</strong> <span id="ownerEmail">Unknown</span></p>
+                                    <p><strong>Phone:</strong> <span id="ownerPhone1">Unknown</span></p>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="modal fade text-center" id="editClientModal" tabindex="-1" aria-labelledby="editClientLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div style="background-color: #cfc4ba;" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editClientModalLabel">Update Client Information</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Edit Listing Form -->
+                    <form id="editClientForm" enctype="multipart/form-data" method="POST">
+                        <div class="mb-3">
+                            <label for="editClientId" class="form-label">Client Id</label>
+                            <input type="text" class="form-control" id="editClientId" name="editClientId" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editClientFirstName" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="editClientFirstName" name="editClientFirstName">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editClientLastName" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="editClientLastName" name="editClientLastName">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editClientPhone" class="form-label">Phone</label>
+                            <input type="tel" class="form-control" id="editClientPhone" name="editClientPhone">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editClientEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="editClientEmail" name="editClientEmail">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editClientAddress" class="form-label">Address</label>
+                            <input type="text" class="form-control" id="editClientAddress" name="editClientAddress">
+                        </div>
+                        <button type="submit"  class="btn btn-success">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const firstName = urlParams.get('firstName');
+            const lastName = urlParams.get('lastName');
+            const employmentId = urlParams.get('employmentId');
+            const profilePic = urlParams.get('profilePicPath');
+
+            // Update the DOM with the URL parameter values
+            const firstNameElement = document.getElementById('firstName');
+            const lastNameElement = document.getElementById('lastName');
+            const employmentIdElement = document.getElementById('employmentId');
+            const profilePicElement = document.getElementById('profilePic');
+
+            if (firstName && firstNameElement) {
+                firstNameElement.textContent = firstName;
+            }
+
+            if (lastName && lastNameElement) {
+                lastNameElement.textContent = lastName;
+            }
+
+            if (employmentId && employmentIdElement) {
+                employmentIdElement.textContent = employmentId;
+            }
+
+            if (profilePic && profilePicElement) {
+                profilePicElement.src = profilePic;
+            }
+
+            upDatePropertyListing();
+            upDateClientListing()
+            document.getElementById('listingForm').reset();
+        });
+
+        const searchForm = document.getElementById('searchForm');
+        searchForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            formData = new FormData(searchForm);
+
+            console.log(...formData.entries());
+            
+            try {
+                const response = await fetch('/property/search', {
+                    method: 'POST',
+                    
+                    body: formData
+                });
+
+                // Handle non-OK responses
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    alert(errorData.message);
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                //console.log(data);
+
+                if (data.propertySearched.length === 0) {
+                    alert('No properties found for the provided address.');
+                    return;
+                }
+                
+                const listingContainer = document.getElementById('listingsContainer');
+                listingContainer.innerHTML = ''; // Clear existing listings
+               // const baseUrl = 'https://localhost/';
+                data.propertySearched.forEach((property, index) => {
+                    
+                    const owner = data.propertyOwner.find(o => o._id.toString() === property.propertyOwner.toString()
+                    )
+                    //console.log(owner)
+                    const propertyPrice = property.price;
+                    const propertyPriceDisplay = `$${parseInt(propertyPrice).toLocaleString()}`;
+                   const propertyCard = `
+        <div class=" listing-card text-center">
+     <img src="${property.propertyImage[0]}" alt="Property Image" style="width:100%; height:150px; object-fit:cover; border-radius:5px;"/>
+     <h3>${property.title}</h3>
+     <p><strong>Address:</strong> ${property.address.street} ${property.address.locality} ${property.address.city}</p>
+     <p><strong>Price:</strong> ${propertyPriceDisplay}</p>
+     <p><strong>Description:</strong> ${property.description}</p>
+
+     <!-- Button to Open Modal -->
+     <button type="button" class="btn btn-light w-100 mb-2"
+         data-bs-toggle="modal"
+         data-bs-target="#editListingModal"
+         data-first-name="${owner.firstName}"
+         data-last-name="${owner.lastName}"
+         data-owners-address="${owner.address}"
+         data-email="${owner.email}"
+         data-phone="${owner.phone}"
+         data-client-of="${property.clientOf.employmentId}"
+         data-title="${property.title}"
+         data-street="${property.address.street}"
+          data-locality="${property.address.locality}"
+          data-city="${property.address.city}"
+         data-address-old="${property.address}"
+         data-price="${property.price}"
+         data-description="${property.description}"
+         data-propertyId="${property._id}">
+         Edit Listing
+     </button>
+     <button class="btn btn-light w-100 mb-2"
+     data-bs-propertyImage=${property.propertyImage}   
+     data-bs-toggle="modal"
+     data-bs-target="#viewListingModal"
+     data-first-name="${owner.firstName}"
+     data-last-name="${owner.lastName}"
+     data-owners-address="${owner.address}"
+     data-email="${owner.email}"
+     data-phone="${owner.phone}"
+     data-client-of="${property.clientOf.employmentId}"
+     data-title="${property.title}"
+     data-street="${property.address.street}"
+ data-locality="${property.address.locality}"
+ data-city="${property.address.city}"
+     data-address-old="${property.address}"
+     data-price="${property.price}"
+     data-description="${property.description}"
+     data-propertyId="${property._id}">
+     View Property</button>
+     <button class="btn btn-light w-100 mb-2" data-propertyId="${property._id}" data-bs-toggle="modal" data-bs-target="#uploadPhotoModal">Add Photos</button>
+ </div>`;
+
+                    listingContainer.insertAdjacentHTML('beforeend', propertyCard);
+                });
+
+            } catch (error) {
+                console.error('Error fetching property listings:', error);
+            }
+        });
+
+
+        document.getElementById("listingForm").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const form = document.getElementById("listingForm");
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch("/property/add", {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const errorResult = await response.json(); // Convert response to JSON
+                    //console.log("Error adding property listing:", errorResult.message);
+                    alert(errorResult.message); // Show error message
+                } else {
+                    const result = await response.json(); // Convert response to JSON
+                    // console.log("Property added successfully:", result.message);
+
+                    alert(result.message); // Show success message
+                    window.location.reload();
+                    document.getElementById('listingForm').reset();
+                }
+            } catch (error) {
+                //console.error("Error during fetch:", error);
+                alert("An error occurred while adding the property.");
+            }
+        });
+        document.getElementById('btnSearchListing').addEventListener('click', () => {
+            const employmentId = document.getElementById('employmentId').innerText;
+            const firstName = document.getElementById('firstName').innerText;
+            const lastName = document.getElementById('lastName').innerText;
+
+            // Construct the URL with query parameters
+            const url = `/searchListing.html?employmentId=${encodeURIComponent(employmentId)}&firstName=${encodeURIComponent(firstName)}&lastName=${encodeURIComponent(lastName)}`;
+
+            // Redirect to the new page
+            window.location.href = url;
+        });
+        document.getElementById('btnSearchClient').addEventListener('click', () => {
+            const employmentId = document.getElementById('employmentId').innerText;
+            const firstName = document.getElementById('firstName').innerText;
+            const lastName = document.getElementById('lastName').innerText;
+
+            // Construct the URL with query parameters
+            const url = `/searchClients.html?employmentId=${encodeURIComponent(employmentId)}&firstName=${encodeURIComponent(firstName)}&lastName=${encodeURIComponent(lastName)}`;
+
+            // Redirect to the new page
+            window.location.href = url;
+        });
+
+        // Function to dynamically add the new property to the viewListingsSection
+        async function upDatePropertyListing() {
+            const employmentId = document.getElementById('employmentId').textContent.trim();
+            //console.log(employmentId)
+            try {
+                const response = await fetch('/property/listing', {
+                    method: 'POST',
+                    headers: { 'Content-Type':'application/json'},
+                    body: JSON.stringify({ employmentId: employmentId }) 
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch property listing');
+                }
+
+                const data = await response.json(); // Assuming the server responds with JSON
+                // console.log(data); // Log the data received from the server
+                if (data.message === "No listings found for this staff member") {
+                    alert("Staff does not have any listing")
+                } else {
+                    const listingsContainer = document.querySelector("#listingsContainer");
+
+                    // Clear any previous listings to avoid duplicates
+                    listingsContainer.innerHTML = '';
+
+
+
+                    const propertyOwner = data.propertyOwner; // Updated to match the response structure
+                    //console.log(propertyOwner);
+
+                    data.staffListing.forEach((listing) => {
+                        // console.log(listing)
+                        // Find the owner corresponding to this listing's propertyOwner ID
+                        const owner = propertyOwner.find(propertyOwner => propertyOwner._id === listing.propertyOwner);
+                        const propertyPrice = listing.price;
+                        const propertyPriceDisplay = `$${parseInt(propertyPrice).toLocaleString()}`;
+                        if (owner) {
+                            const propertyCard = document.createElement('div');
+                            propertyCard.classList.add('listing-card');
+
+                            propertyCard.innerHTML = `
+                        <div class="text-center">
+                            <img src="${listing.propertyImage[0]}" alt="Property Image" style="width:100%; height:150px; object-fit:cover; border-radius:5px;"/>
+                            <h3>${listing.title}</h3>
+                            <p><strong>Address:</strong> ${listing.address.street}, ${listing.address.locality}, ${listing.address.city}</p>
+                            <p><strong>Price:</strong> ${propertyPriceDisplay}</p>
+                            <p><strong>Description:</strong> ${listing.description}</p>
+
+                            <!-- Button to Open Modal -->
+                            <button type="button" class="btn btn-light w-100 mb-2"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editListingModal"
+                                data-first-name="${owner.firstName}"
+                                data-last-name="${owner.lastName}"
+                                data-owners-address="${owner.address}"
+                                data-email="${owner.email}"
+                                data-phone="${owner.phone}"
+                                data-client-of="${listing.clientOf.employmentId}"
+                                data-title="${listing.title}"
+                                data-street="${listing.address.street}"
+                                data-locality="${listing.address.locality}"
+                                data-city="${listing.address.city}"
+                                data-price="${listing.price}"
+                                data-description="${listing.description}"
+                                data-propertyId="${listing._id}">
+                                Edit Listing
+                            </button>
+                            <button class="btn btn-light w-100 mb-2"
+                            data-bs-propertyImage=${listing.propertyImage}   
+                            data-bs-toggle="modal"
+                            data-bs-target="#viewListingModal"
+                            data-first-name="${owner.firstName}"
+                            data-last-name="${owner.lastName}"
+                            data-owners-address="${owner.address}"
+                            data-email="${owner.email}"
+                            data-phone="${owner.phone}"
+                            data-client-of="${listing.clientOf.employmentId}"
+                            data-title="${listing.title}"
+                            data-street="${listing.address.street}"
+                            data-locality="${listing.address.locality}"
+                            data-city="${listing.address.city}"
+                            data-address-old="${listing.address}"
+                            data-price="${listing.price}"
+                            data-description="${listing.description}"
+                            data-propertyId="${listing._id}">
+                            View Property</button>
+                            <button class="btn btn-light w-100 mb-2" data-propertyId="${listing._id}" data-bs-toggle="modal" data-bs-target="#uploadPhotoModal">Add Photos</button>
+                        </div>`;
+
+                            // Append the new property card to the listings container
+                            listingsContainer.appendChild(propertyCard);
+                        } else {
+                            console.error(`No owner found for listing with _id: ${listing.propertyOwner}`);
+                        }
+
+                    });
+                }
+            } catch (error) {
+                alert('An error occurred while trying to fetch property listings');
+                console.error(error);
+            }
+        }
+        const form = document.getElementById('editListingForm');
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = new FormData(form);
+             //console.log([...formData.entries()])
+            try {
+                const response = await fetch('/property/update', {
+                    method: 'POST',
+                    
+                    body: formData
+                });
+               console.log(response)
+                if (!response.ok) {
+                    
+                    const errorResult = await response.json(); 
+                    alert(errorResult.message); 
+                    return;
+                }
+
+                // If response is successful, parse and display the result
+                const result = await response.json();
+                alert('Listing updated successfully');
+                // Hide the modal after successful upload
+                const modalElement = document.getElementById('editListingModal');
+                const modalInstance = bootstrap.Modal.getInstance(modalElement); // Get the existing modal instance
+                modalInstance.hide(); // Hide the modal
+
+                // Handle success (e.g., show success message, close modal, etc.)
+            } catch (error) {
+                console.error('Error updating listing:', error);
+                alert('An error occurred while updating the listing.');
+            }
+
+        });
+        const uploadPhotos = document.getElementById('uploadPhotoModal');
+        uploadPhotos.addEventListener('show.bs.modal', (event) => {
+
+            const button = event.relatedTarget;
+            const propertyId = button.getAttribute('data-propertyId');
+            document.getElementById('uploadPropertyId').value = propertyId;
+        })
+
+        const submitPhotosForm = document.getElementById('uploadPhotosForm');
+        submitPhotosForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            // Create formData from the form
+            const formData = new FormData(submitPhotosForm);
+            console.log([...formData]); // Log entries to see what's being sent
+
+            try {
+                const response = await fetch('/property/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status}`);
+                }
+
+                // Handle successful upload
+                const result = await response.json();
+                alert('Upload successful');
+
+                // Hide the modal after successful upload
+                const modalElement = document.getElementById('uploadPhotoModal');
+                const modalInstance = bootstrap.Modal.getInstance(modalElement); // Get the existing modal instance
+                modalInstance.hide(); // Hide the modal
+
+
+            } catch (error) {
+                console.error('Upload failed:', error);
+                alert('Error uploading photos. Please try again.');
+            }
+        });
+
+        const viewListingModal = document.getElementById('viewListingModal');
+        viewListingModal.addEventListener('show.bs.modal', (event) => {
+            const button = event.relatedTarget;
+            const propertyImages = button.getAttribute('data-bs-propertyImage').split(',');
+            const imageCarousel = document.getElementById('imageCarousel');
+            imageCarousel.innerHTML = ''; // Clear previous images
+
+            // Property details, fetched from button attributes
+            const propertyStreet = button.getAttribute('data-street');
+            const propertyLocality = button.getAttribute('data-locality');
+            const propertyCity = button.getAttribute('data-city');        
+            const propertyPrice = button.getAttribute('data-price');
+            const propertyDescription = button.getAttribute('data-description');
+            const propertyOwnerFirstName = button.getAttribute('data-first-name');
+            const propertyOwnerLastName = button.getAttribute('data-last-name');
+            const propertyOwnerEmail = button.getAttribute('data-email');
+            const propertyOwnerPhone = button.getAttribute('data-phone');
+            const propertyTitle = button.getAttribute('data-title');
+
+            propertyPriceDisplay = `$${parseInt(propertyPrice).toLocaleString()}`;
+            document.getElementById('propertyLocation').textContent = propertyStreet + ', ' + propertyLocality + ', ' + propertyCity;
+            document.getElementById('propertyPrice').textContent = propertyPriceDisplay;
+            document.getElementById('propertyDescription').textContent = propertyDescription;
+            document.getElementById('ownerName').textContent = propertyOwnerFirstName + ' ' + propertyOwnerLastName;
+            document.getElementById('ownerEmail').textContent = propertyOwnerEmail;
+            document.getElementById('ownerPhone1').textContent = propertyOwnerPhone;
+            document.getElementById('propertyTitle').textContent = propertyTitle;
+            
+
+
+
+
+            // Loop through property images to create carousel items
+            propertyImages.forEach((image, index) => {
+                const propertyPhotos = document.createElement('div');
+                propertyPhotos.classList.add('carousel-item');
+                if (index === 0) propertyPhotos.classList.add('active'); // Make the first item active
+
+                propertyPhotos.innerHTML = `
+        <img src="${image.trim()}" class="d-block w-100" alt="Property Image ${index + 1}" style="height: 400px; object-fit: cover;">
+    `;
+
+                // Append the new carousel item to the carousel inner
+                imageCarousel.appendChild(propertyPhotos);
+            });
+        });
+
+
+        const editListingModal = document.getElementById('editListingModal');
+        editListingModal.addEventListener('show.bs.modal', (event) => {
+            // Get the button that triggered the modal
+            const button = event.relatedTarget;
+
+            // Extract the data from the button
+
+            const firstName = button.getAttribute('data-first-name');
+            const lastName = button.getAttribute('data-last-name');
+            const ownersAddress = button.getAttribute('data-owners-address');
+            const email = button.getAttribute('data-email');
+            const phone = button.getAttribute('data-phone');
+            const clientOf = button.getAttribute('data-client-of');
+            const title = button.getAttribute('data-title');
+            const street = button.getAttribute('data-street');
+            const locality = button.getAttribute('data-locality');
+            const city = button.getAttribute('data-city');
+            const price = button.getAttribute('data-price');
+            const description = button.getAttribute('data-description');
+            const propertyId = button.getAttribute('data-propertyId');
+            const oldStreet = button.getAttribute('data-street-old');
+            const oldLocality = button.getAttribute('data-locality-old');
+            const oldCity = button.getAttribute('data-city-old');
+
+
+            // Populate the modal fields
+            //document.getElementById('editClientImage').value = clientImage; // Handle image separately
+            document.getElementById('editFirstName').value = firstName;
+            document.getElementById('editLastName').value = lastName;
+            document.getElementById('editOwnersAddress').value = ownersAddress;
+            document.getElementById('editEmail').value = email;
+            document.getElementById('editOwnerPhone').value = phone;
+            document.getElementById('editClientOf').value = clientOf;
+            document.getElementById('editTitle').value = title;
+            document.getElementById('editStreet').value = street;
+            document.getElementById('editLocality').value = locality;
+            document.getElementById('editCity').value = city;
+            document.getElementById('editPrice').value = price;
+            document.getElementById('editDescription').value = description;
+            document.getElementById('propertyId').value = propertyId;
+            document.getElementById('editOldStreet').value = street;
+            document.getElementById('editOldLocality').value = locality;
+            document.getElementById('editOldCity').value = city;
+
+        });
+        const editClient = document.getElementById('editClientModal');
+        editClient.addEventListener('show.bs.modal', (event) => {
+            const button = event.relatedTarget;
+
+            // Ensure 'relatedTarget' is defined
+            if (button) {
+                const firstName = button.getAttribute('data-firstname');
+                const lastName = button.getAttribute('data-lastname');
+                const phone = button.getAttribute('data-phone');
+                const email = button.getAttribute('data-email');
+                const address = button.getAttribute('data-address');
+                const clientId = button.getAttribute('data-clientId')
+
+                // Populate modal fields
+                document.getElementById('editClientFirstName').value = firstName || '';
+                document.getElementById('editClientLastName').value = lastName || '';
+                document.getElementById('editClientPhone').value = phone || '';
+                document.getElementById('editClientEmail').value = email || '';
+                document.getElementById('editClientAddress').value = address || '';
+                document.getElementById('editClientId').value = clientId || '';
+            }
+        });
+        const editClientForm = document.getElementById('editClientForm');
+        editClientForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = new FormData(editClientForm);
+           
+            try {
+
+                const response = await fetch('/client/update', {
+                    method: 'POST',
+                    body:formData
+                }) 
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status}`);
+                }
+
+                // Handle successful upload
+                const result = await response.json();
+                console.log(result)
+                alert(result.message);
+
+                // Hide the modal after successful upload
+                const modalElement = document.getElementById('editClientModal');
+                const modalInstance = bootstrap.Modal.getInstance(modalElement); // Get the existing modal instance
+                modalInstance.hide(); // Hide the modal
+
+            } catch (error) {
+                return res.status(500).json({message:' An error occured while updating client information'})
+            }
+
+        })
+        async function upDateClientListing() {
+            const employmentId = document.getElementById('employmentId').textContent.trim();
+            try {
+                const response = await fetch('/client/listing', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json' 
+                    },
+                    body: JSON.stringify({ employmentId: employmentId }) 
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch property listing');
+                }
+                const data = await response.json();
+               // console.log(data); // Log the data received from the server
+                if (data.message === 'No clients found for this staff member') {
+                    alert('Staff does not have any client')
+                } else {
+                    const listingsContainer = document.querySelector("#listingsClient");
+
+
+                    // Clear any previous listings to avoid duplicates
+                    listingsContainer.innerHTML = '';
+
+
+                    data.clientListing.forEach((client) => {
+                        const clientCard = document.createElement('div');
+                        clientCard.classList.add('listing-card');
+
+                        clientCard.innerHTML = `
+                                        <div class="text-center">
+                            <img src="${client.clientImage}" alt="Property Image" class="staff-profile-pic"/>
+                            <p><strong>Name:</strong> ${client.firstName} ${client.lastName} </p>
+                            <p><strong>Phone:</strong> ${client.phone}</p>
+                            <p><strong>Email:</strong> ${client.email}</p>
+                            <button class="btn btn-light w-100"
+                            data-bs-toggle="modal"
+                            data-bs-target="#editClientModal"
+                            data-firstName = "${client.firstName}"
+                            data-lastName= "${client.lastName}"
+                            data-phone = "${client.phone}"
+                            data-email = "${client.email}"
+                            data-address ="${client.address}"
+                            data-clientId ="${client._id}"
+                            >Edit Client</button>
+                            </div>
+`;
+
+                        // Append the new property card to the listings container
+                        listingsContainer.appendChild(clientCard);
+
+
+                    });
+                }
+                } catch (error) {
+                    alert('An error occurred while trying to fetch property listing');
+                    console.error(error);
+                }
+
+            
+            }
+        
+
+    </script>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
+
