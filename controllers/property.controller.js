@@ -267,10 +267,10 @@ let propertyController = {
 
             // Process the file paths
             let propertyImagePath = propertyImage[0].path.replace(/\\/g, '/').replace(/\uploads\//g,'');
-            propertyImagePath = '/' + propertyImagePath;
+            propertyImagePath = 'https://property-management-production-63a4.up.railway.app/' + propertyImagePath;
 
             let clientImagePath = clientImage[0].path.replace(/\\/g, '/').replace(/\uploads\//g,'');
-            clientImagePath = '/' + clientImagePath;
+            clientImagePath = 'https://property-management-production-63a4.up.railway.app/' + clientImagePath;
             //console.log(req.body)
             // Extract property details from the request body
             const { firstName, street, locality, city, lastName, ownerPhone, title, clientOf, price, email, description, ownersAddress } = req.body;
