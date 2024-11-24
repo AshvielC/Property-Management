@@ -26,7 +26,7 @@ const staffController = {
         // Convert the profile picture path for consistent use
       
         let convertedPath = profilePic.path.replace(/\\/g, '')
-            //.replace(/^uploads/g, '');
+            .replace(/^uploads/g, '');
 
         convertedPath =   'https://property-management-production-63a4.up.railway.app/uploads' +  convertedPath;
         //console.log(convertedPath)
