@@ -28,7 +28,7 @@ const staffController = {
         let convertedPath = profilePic.path.replace(/\\/g, '')
             .replace(/^uploads/g, '');
 
-        convertedPath =   'https://property-management-production-63a4.up.railway.app/uploads' +  convertedPath;
+        convertedPath =   'https://property-management-production-63a4.up.railway.app/mnt/data/uploads' +  convertedPath;
         //console.log(convertedPath)
         try {
             // Check if a staff member with the same phone number already exists
