@@ -1,10 +1,10 @@
 'use strict'
 
 import multer from 'multer'
-
+const imgPath = '/mnt/data/uploads'
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, '/mnt/data/uploads/');
+        cb(null, imgPath);
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + '-' + file.originalname); // File naming convention
