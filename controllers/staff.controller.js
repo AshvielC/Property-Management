@@ -26,9 +26,9 @@ const staffController = {
         // Convert the profile picture path for consistent use
       
         let convertedPath = profilePic.path.replace(/\\/g, '')
-            .replace(/^uploads/g, '');
+           // .replace(/^uploads/g, '');
 
-        convertedPath =  '/mnt/data/uploads/' + convertedPath;
+        convertedPath =   convertedPath;
         //console.log(convertedPath)
         try {
             // Check if a staff member with the same phone number already exists
