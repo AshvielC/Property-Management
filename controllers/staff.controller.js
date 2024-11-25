@@ -13,7 +13,7 @@ const staffController = {
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-
+        console.log(req.body)
         // Extract data from request body
         const { firstName, lastName, staffPassword, phone, email, address, designation, tin, fnpf, employmentId, startDate } = req.body;
         const profilePic = req.file;
